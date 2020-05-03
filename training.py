@@ -69,21 +69,18 @@ IMAGE_LABELS_val = cover_labels[-n_samples_val:] + crypt_labels[-n_samples_val*3
 sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 
-# TODO: Decide if doing oversampling or undersampling
 train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=4, shuffle=True)
 validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=4)
 
 print("Loading model")
-#model = tf.keras.applications.ResNet101V2()
-#model = tf.keras.applications.MobileNetV2()
 # TODO: Decide if use preprocess
-model = RegressionModel().build_model()
-print("Done")
+regression = RegressionModel()
+model = regression.build_model()
 model.summary()
 
 model.fit(x=train_gen,
           steps_per_epoch=len(train_gen),
           validation_data=validation_gen,
           validation_steps=len(validation_gen),
-          epochs=10)
-
+          epochs=10,
+          callbacks=regression.callbacks)
