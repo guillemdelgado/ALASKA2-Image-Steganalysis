@@ -40,9 +40,12 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
         indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
 
         # Generate data
-        x, y = self.__data_generation(indexes)
-
-        return x, y
+        if self.labels is not None:
+            x, y = self.__data_generation(indexes)
+            return x, y
+        else:
+            x = self.__data_generation(indexes)
+            return x
 
     def on_epoch_end(self):
         'Updates indexes after each epoch'
@@ -60,7 +63,10 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
 
         list_IDs_temp = [self.data[k] for k in indexes]
 
-        list_labels_temp = [self.labels[k] for k in indexes]
+        if self.labels is not None:
+            list_labels_temp = [self.labels[k] for k in indexes]
+        else:
+            list_labels_temp = [None for k in indexes]
 
         for i, data in enumerate(zip(list_IDs_temp, list_labels_temp)):
             frames = data[0]
@@ -82,5 +88,7 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
         #     cv2.imshow("seq", x[i] / 255)
         #     print("Y: ", y[i])
         #     cv2.waitKey(0)
-
-        return x, y
+        if self.labels is not None:
+            return x, y
+        else:
+            return x

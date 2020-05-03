@@ -42,6 +42,12 @@ UERD_ids = os.listdir(os.path.join(PATH, 'UERD'))
 for i in range(len(UERD_ids)):
     UERD_ids[i] = os.path.join(os.path.join(PATH, 'UERD'), UERD_ids[i])
 
+# Test data
+test_ids = os.listdir(os.path.join(PATH, 'Test'))
+for i in range(len(test_ids)):
+    test_ids[i] = os.path.join(os.path.join(PATH, 'Test'), test_ids[i])
+
+
 crypt_ids = JMiPOD_ids + JUNIWARD_ids + UERD_ids
 crypt_labels = [1] * len(crypt_ids)
 N_IMAGES = len(cover_ids)*train_val_ratio
@@ -71,6 +77,7 @@ sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=4, shuffle=True)
 validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=4)
+test_gen = DataGenerator(test_ids, None, batch_size=8)
 
 print("Loading model")
 # TODO: Decide if use preprocess
@@ -82,5 +89,12 @@ model.fit(x=train_gen,
           steps_per_epoch=len(train_gen),
           validation_data=validation_gen,
           validation_steps=len(validation_gen),
-          epochs=10,
+          epochs=1,
           callbacks=regression.callbacks)
+
+output_predictions = model.predict(x=test_gen,
+                                   steps=len(test_gen))
+sample_sub['Label'] = output_predictions
+sample_sub.to_csv('submission.csv', index=None)
+
+
