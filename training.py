@@ -75,12 +75,11 @@ IMAGE_LABELS_val = cover_labels[-n_samples_val:] + crypt_labels[-n_samples_val*3
 sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 
-train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=4, shuffle=True)
-validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=4)
+train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=4, shuffle=True, sampling="under_sample")
+validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=4, sampling="under_sample")
 test_gen = DataGenerator(test_ids, None, batch_size=8)
 
 print("Loading model")
-# TODO: Decide if use preprocess
 regression = RegressionModel()
 model = regression.build_model()
 model.summary()

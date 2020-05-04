@@ -2,6 +2,9 @@ import numpy as np
 import tensorflow.keras
 import sklearn.utils
 import cv2
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+import itertools
 import random
 from tensorflow.keras.applications.mobilenet import preprocess_input
 import time
@@ -15,11 +18,22 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
     'Generates data for Keras'
 
     def __init__(self, data, labels, batch_size=32, dim=512, n_channels=3,
-                 shuffle=False):
+                 shuffle=False, sampling=None):
 
         """Initialization"""
-        self.data = data
-        self.labels = labels
+        if sampling == 'under_sample':
+            rus = RandomUnderSampler(random_state=0, replacement=True)
+            X_resampled, y_resampled = rus.fit_resample(np.array(data).reshape(-1, 1), np.array(labels))
+            self.data = list(itertools.chain(*X_resampled.tolist()))
+            self.labels = y_resampled.tolist()
+        elif sampling == 'over_sample':
+            ros = RandomOverSampler(random_state=0)
+            X_resampled, y_resampled = ros.fit_resample(np.array(data).reshape(-1, 1), np.array(labels))
+            self.data = list(itertools.chain(*X_resampled.tolist()))
+            self.labels = y_resampled.tolist()
+        else:
+            self.data = data
+            self.labels = labels
 
         self.dim = dim
         self.batch_size = batch_size
@@ -27,6 +41,8 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
 
         self.n_classes = 1
         self.shuffle = shuffle
+
+
 
         self.on_epoch_end()
 

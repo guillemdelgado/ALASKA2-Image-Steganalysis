@@ -7,28 +7,24 @@ import os
 
 
 class RegressionModel:
-    def __init__(self, sampling=None, input_shape=(512, 512, 3), log_dir='./logs'):
+    def __init__(self, input_shape=(512, 512, 3), log_dir='./logs'):
         self.input_shape = input_shape
         self.log_dir = log_dir
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
         self.model = None
         self.callbacks = None
-        if sampling == "oversampling":
-            print("TODO")
-        elif sampling == "undersampling":
-            print("TODO")
 
     def build_model(self):
         x_input = Input(shape=self.input_shape, name='input_1')
-        resnet = tf.keras.applications.ResNet101V2(include_top=False,
+        backbone = tf.keras.applications.DenseNet121(include_top=False,
                                                    weights='imagenet',
                                                    input_tensor=x_input,
                                                    input_shape=None,
                                                    pooling='avg',
                                                    classes=1)
-        out = Dense(1, kernel_initializer='normal')(resnet.output)
-        model = Model(inputs=resnet.input, outputs=out)
+        out = Dense(1, kernel_initializer='normal')(backbone.output)
+        model = Model(inputs=backbone.input, outputs=out)
         model_checkpoint = ModelCheckpoint(
             filepath=self.log_dir + '/ssd300_gestoos_07+12_epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}.h5',
             monitor='val_loss',
