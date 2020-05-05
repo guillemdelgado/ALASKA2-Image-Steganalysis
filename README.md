@@ -1,6 +1,3 @@
-# ALASKA2-Image-Steganalysis
-ALASKA2 Challanges from Kaggle. Detect secret data hidden within digital images.
-
 # ALASKA2 Image Steganalysis from Kaggle
 
 Repository for the SlimBros team for the [ALASKA2 Image Steganalysis challenge](https://www.kaggle.com/c/alaska2-image-steganalysis/) from Kaggle (May 2020 to July 2020). In this competition, In the competition, the goal is to create an efficient and reliable method to detect secret data hidden within innocuous-seeming digital images. 
