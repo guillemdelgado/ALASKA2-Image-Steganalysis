@@ -5,7 +5,6 @@ import sklearn.utils
 import matplotlib
 import matplotlib.pyplot as plt
 import random
-
 from PIL import Image
 from random import shuffle
 
@@ -16,8 +15,9 @@ import utils
 from data_loader.generator import DataGenerator
 from model.regression import RegressionModel
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 utils.seed_everything()
+
 
 
 
@@ -75,8 +75,8 @@ IMAGE_LABELS_val = cover_labels[-n_samples_val:] + crypt_labels[-n_samples_val*3
 sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 
-train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=4, shuffle=True, sampling="under_sample")
-validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=4, sampling="under_sample")
+train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=32, shuffle=True, sampling="under_sample")
+validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=32, sampling="under_sample")
 test_gen = DataGenerator(test_ids, None, batch_size=8)
 
 print("Loading model")

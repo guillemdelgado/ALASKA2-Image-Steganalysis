@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras import Model
 from tensorflow.keras.callbacks import Callback, TensorBoard, ModelCheckpoint
 import os
-
+from utils.metrics import alaska_tf
 
 class RegressionModel:
     def __init__(self, input_shape=(512, 512, 3), log_dir='./logs'):
@@ -23,10 +23,12 @@ class RegressionModel:
                                                    input_shape=None,
                                                    pooling='avg',
                                                    classes=1)
+        for layer in backbone.layers:
+            layer.trainable = False
         out = Dense(1, kernel_initializer='normal')(backbone.output)
         model = Model(inputs=backbone.input, outputs=out)
         model_checkpoint = ModelCheckpoint(
-            filepath=self.log_dir + '/ssd300_gestoos_07+12_epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}.h5',
+            filepath=self.log_dir + '/regression_epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}.h5',
             monitor='val_loss',
             verbose=1,
             save_best_only=True,
@@ -37,7 +39,7 @@ class RegressionModel:
         self.callbacks = [tb, model_checkpoint]
         model.compile(optimizer='adam',
                       loss='mse',
-                      metrics=['mse'])
+                      metrics=['mse', alaska_tf])
 
         self.model = model
         return self.model
