@@ -36,7 +36,7 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 ```
 
 ## Models
-- [] Regression
+- [ ] Regression
   - [ ] ensenet
 - [ ] GAN
   - [ ] State of the Art for Steganalysis 
