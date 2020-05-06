@@ -24,6 +24,7 @@ utils.seed_everything()
 PATH = "D:\\Data\\alaska2-image-steganalysis\\"
 IMG_SIZE = 512
 train_val_ratio = 0.7
+batch_size = 16
 
 # Cover Images
 cover_ids = os.listdir(os.path.join(PATH, 'Cover'))
@@ -75,8 +76,8 @@ IMAGE_LABELS_val = cover_labels[-n_samples_val:] + crypt_labels[-n_samples_val*3
 sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 
-train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=32, shuffle=True, sampling="under_sample")
-validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=32, sampling="under_sample")
+train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=batch_size, shuffle=True, sampling="under_sample")
+validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=batch_size, sampling="under_sample")
 test_gen = DataGenerator(test_ids, None, batch_size=8)
 
 print("Loading model")
