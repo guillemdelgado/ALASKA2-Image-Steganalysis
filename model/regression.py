@@ -24,7 +24,7 @@ class RegressionModel:
                                                    pooling='avg',
                                                    classes=1)
         for layer in backbone.layers:
-            layer.trainable = False
+            layer.trainable = True
         out = Dense(1, kernel_initializer='normal')(backbone.output)
         model = Model(inputs=backbone.input, outputs=out)
         model_checkpoint = ModelCheckpoint(

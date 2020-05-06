@@ -15,7 +15,7 @@ import utils
 from data_loader.generator import DataGenerator
 from model.regression import RegressionModel
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 utils.seed_everything()
 
 
