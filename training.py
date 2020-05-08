@@ -9,6 +9,7 @@ from PIL import Image
 from random import shuffle
 
 import tensorflow as tf
+from tensorflow.keras.models import load_model
 import tensorflow.keras.backend as K
 
 import utils
@@ -24,10 +25,11 @@ utils.seed_everything()
 PATH = "D:\\Data\\alaska2-image-steganalysis\\"
 IMG_SIZE = 512
 train_val_ratio = 0.7
-batch_size = 16
+batch_size = 32
 
 # Cover Images
 cover_ids = os.listdir(os.path.join(PATH, 'Cover'))
+cover_ids = cover_ids
 cover_labels = [-1] * len(cover_ids)
 for i in range(len(cover_ids)):
     cover_ids[i] = os.path.join(os.path.join(PATH, 'Cover'), cover_ids[i])
@@ -89,9 +91,11 @@ model.fit(x=train_gen,
           steps_per_epoch=len(train_gen),
           validation_data=validation_gen,
           validation_steps=len(validation_gen),
-          epochs=1,
+          epochs=10,
           callbacks=regression.callbacks)
-
+# from utils.metrics import alaska_tf
+# model = load_model("C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\logs\\regression_epoch-08_loss-1.0012_val_loss-0.9885.h5",
+#                     custom_objects={'alaska_tf': alaska_tf})
 output_predictions = model.predict(x=test_gen,
                                    steps=len(test_gen))
 sample_sub['Label'] = output_predictions
