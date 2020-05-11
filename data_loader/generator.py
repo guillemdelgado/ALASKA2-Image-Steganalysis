@@ -6,6 +6,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 import itertools
 import random
+from utils.data_augmentation import horizontal_flip, vertical_flip
 from tensorflow.keras.applications.mobilenet import preprocess_input
 import time
 from itertools import cycle
@@ -18,7 +19,7 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
     'Generates data for Keras'
 
     def __init__(self, data, labels, batch_size=32, dim=512, n_channels=3,
-                 shuffle=False, sampling=None):
+                 shuffle=False, sampling=None, data_augmentation=False):
 
         """Initialization"""
         if sampling == 'under_sample':
@@ -41,9 +42,7 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
 
         self.n_classes = 1
         self.shuffle = shuffle
-
-
-
+        self.data_augmentation = data_augmentation
         self.on_epoch_end()
 
     def __len__(self):
@@ -92,6 +91,12 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
                 image_decoded = cv2.cvtColor(image_decoded, cv2.COLOR_BGR2RGB)
 
                 image_decoded = cv2.resize(image_decoded, (self.dim, self.dim))
+                if self.data_augmentation:
+                    if random.uniform(0, 1):
+                        image_decoded = horizontal_flip(image_decoded)
+                    if random.uniform(0, 1):
+                        image_decoded = vertical_flip(image_decoded)
+
                 # image_decoded = self.resize_crop(image_decoded)
                 image_decoded = image_decoded.astype('float32')
                 # image_decoded = preprocess_input(np.expand_dims(image_decoded, axis=0))
