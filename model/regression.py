@@ -6,6 +6,7 @@ from tensorflow.keras.callbacks import Callback, TensorBoard, ModelCheckpoint
 import os
 from utils.metrics import alaska_tf
 from model.backbone.UNIWARD import UNIWARD
+from model.backbone.steganogan import SteganoGAN
 
 class RegressionModel:
     def __init__(self, input_shape=(512, 512, 3), log_dir='./logs'):
@@ -18,13 +19,13 @@ class RegressionModel:
 
     def build_model(self):
         x_input = Input(shape=self.input_shape, name='input_1')
-        # backbone = tf.keras.applications.DenseNet121(include_top=False,
-        #                                            weights='imagenet',
-        #                                            input_tensor=x_input,
-        #                                            input_shape=None,
-        #                                            pooling='avg',
-        #                                            classes=1)
-        backbone = UNIWARD(x_input).model
+        backbone = tf.keras.applications.DenseNet121(include_top=False,
+                                                   weights='imagenet',
+                                                   input_tensor=x_input,
+                                                   input_shape=None,
+                                                   pooling='avg',
+                                                   classes=1)
+        # backbone = UNIWARD(x_input).model
         for layer in backbone.layers:
             layer.trainable = True
         out = Dense(1, kernel_initializer='normal')(backbone.output)

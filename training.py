@@ -26,6 +26,7 @@ PATH = "D:\\Data\\alaska2-image-steganalysis\\"
 IMG_SIZE = 512
 train_val_ratio = 0.7
 batch_size = 32
+format = "YCBCR"
 
 # Cover Images
 cover_ids = os.listdir(os.path.join(PATH, 'Cover'))
@@ -78,9 +79,11 @@ IMAGE_LABELS_val = cover_labels[-n_samples_val:] + crypt_labels[-n_samples_val*3
 sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 
-train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=batch_size, shuffle=True, sampling="under_sample")
-validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=batch_size, sampling="under_sample")
-test_gen = DataGenerator(test_ids, None, batch_size=8)
+train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=batch_size, shuffle=True,
+                          sampling="under_sample", data_augmentation=True, format=format)
+validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=batch_size,
+                               sampling="under_sample", format=format)
+test_gen = DataGenerator(test_ids, None, batch_size=8, format=format)
 
 print("Loading model")
 regression = RegressionModel()
@@ -93,9 +96,7 @@ model.fit(x=train_gen,
           validation_steps=len(validation_gen),
           epochs=10,
           callbacks=regression.callbacks)
-# from utils.metrics import alaska_tf
-# model = load_model("C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\logs\\regression_epoch-08_loss-1.0012_val_loss-0.9885.h5",
-#                     custom_objects={'alaska_tf': alaska_tf})
+
 output_predictions = model.predict(x=test_gen,
                                    steps=len(test_gen))
 sample_sub['Label'] = output_predictions
