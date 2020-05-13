@@ -8,7 +8,7 @@ import jpegio as jpio
 
 def seed_everything(seed=42):
     np.random.seed(seed)
-    tf.random.set_seed(seed)
+    tf.compat.v1.set_random_seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     os.environ['TF_DETERMINISTIC_OPS'] = '1'
     os.environ['TF_KERAS'] = '1'
@@ -16,11 +16,11 @@ def seed_everything(seed=42):
 
 def JPEGdecompressYCbCr(jpegStruct):
     """
-    Reads DCT coefficients and converts them in YCrCb. Source:
+    Reads DCT coefficients and converts them in YCbCr. Source:
     https://www.kaggle.com/remicogranne/jpeg-explanations-ycbcr-qualityfactor-meaning
 
     :param jpegStruct: jpegio object
-    :return: YCrCb Image
+    :return: YCbCr Image
     """
     nb_colors = len(jpegStruct.coef_arrays)
 
