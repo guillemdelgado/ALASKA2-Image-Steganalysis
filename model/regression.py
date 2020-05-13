@@ -2,11 +2,21 @@ import tensorflow as tf
 import tensorflow.keras.backend as K
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras import Model
-from tensorflow.keras.callbacks import Callback, TensorBoard, ModelCheckpoint
+from tensorflow.keras.callbacks import Callback, TensorBoard, ModelCheckpoint, LearningRateScheduler
+from tensorflow.keras.optimizers import Adam
 import os
 from utils.metrics import alaska_tf
 from model.backbone.UNIWARD import UNIWARD
 from model.backbone.steganogan import SteganoGAN
+
+
+def lr_schedule(epoch):
+    if epoch < 10:
+        return 0.001
+    elif epoch < 100:
+        return 0.0001
+    else:
+        return 0.00001
 
 class RegressionModel:
     def __init__(self, input_shape=(512, 512, 3), log_dir='./logs'):
@@ -40,9 +50,18 @@ class RegressionModel:
             period=1)
         tb = TensorBoard(log_dir=self.log_dir, update_freq='epoch', profile_batch = 100000000)
         self.callbacks = [tb, model_checkpoint]
-        model.compile(optimizer='adam',
+
+
+        adam = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+
+        learning_rate_scheduler = LearningRateScheduler(schedule=lr_schedule,
+                                                        verbose=1)
+        model.compile(optimizer=adam,
                       loss='mse',
                       metrics=['mse', alaska_tf])
 
         self.model = model
         return self.model
+
+
+            
