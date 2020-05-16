@@ -15,78 +15,49 @@ import tensorflow.keras.backend as K
 import utils
 from data_loader.generator import DataGenerator
 from model.regression import RegressionModel
+from data_loader.alaska import Alaska
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 utils.seed_everything()
 
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+config.log_device_placement = True  # to log device placement (on which device the operation ran)
+sess = tf.compat.v1.Session(config=config)
+tf.compat.v1.keras.backend.set_session(sess)
 
 
 
 PATH = "D:\\Data\\alaska2-image-steganalysis\\"
 IMG_SIZE = 512
 train_val_ratio = 0.7
-batch_size = 32
-format = "YCBCR"
+batch_size = 4
+format = "RGB"
+mode = "multiclass"
 
-# Cover Images
-cover_ids = os.listdir(os.path.join(PATH, 'Cover'))
-cover_ids = cover_ids
-cover_labels = [-1] * len(cover_ids)
-for i in range(len(cover_ids)):
-    cover_ids[i] = os.path.join(os.path.join(PATH, 'Cover'), cover_ids[i])
-
-# Crypted Images
-JMiPOD_ids = os.listdir(os.path.join(PATH, 'JMiPOD'))
-for i in range(len(JMiPOD_ids)):
-    JMiPOD_ids[i] = os.path.join(os.path.join(PATH, 'JMiPOD'), JMiPOD_ids[i])
-JUNIWARD_ids = os.listdir(os.path.join(PATH, 'JUNIWARD'))
-for i in range(len(JUNIWARD_ids)):
-    JUNIWARD_ids[i] = os.path.join(os.path.join(PATH, 'JUNIWARD'), JUNIWARD_ids[i])
-UERD_ids = os.listdir(os.path.join(PATH, 'UERD'))
-for i in range(len(UERD_ids)):
-    UERD_ids[i] = os.path.join(os.path.join(PATH, 'UERD'), UERD_ids[i])
+alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file='./multiclass_stega_df.csv')
+data = alaska_data.build()
+IMAGE_IDS_train = data[0]
+IMAGE_LABELS_train = data[1]
+IMAGE_IDS_val = data[2]
+IMAGE_LABELS_val = data[3]
 
 # Test data
 test_ids = os.listdir(os.path.join(PATH, 'Test'))
 for i in range(len(test_ids)):
     test_ids[i] = os.path.join(os.path.join(PATH, 'Test'), test_ids[i])
 
-
-crypt_ids = JMiPOD_ids + JUNIWARD_ids + UERD_ids
-crypt_labels = [1] * len(crypt_ids)
-N_IMAGES = len(cover_ids)*train_val_ratio
-print("Number of images:"
-      "\n\t Cover: {} \n\t JMiPOD: {} \n\t JUNIWARD: {} \n\t UERD: {}".format(len(cover_ids),
-                                                                              len(JMiPOD_ids),
-                                                                              len(JUNIWARD_ids),
-                                                                              len(UERD_ids)))
-n_samples = int(len(cover_labels)*train_val_ratio)
-n_samples_val = len(cover_labels) - n_samples
-
-print("Splitting the dataset:\n\t - Training: \n\t\t Cover: {} \n\t\t Crypt {} \n\t - Validation: "
-      "\n\t\t Cover: {} \n\t\t Crypt {}".format(n_samples, n_samples*3, n_samples_val, n_samples_val*3))
-
-cover_ids = sklearn.utils.shuffle(cover_ids)
-crypt_ids = sklearn.utils.shuffle(crypt_ids)
-IMAGE_IDS_train = cover_ids[:n_samples] + crypt_ids[:n_samples*3]
-IMAGE_LABELS_train = cover_labels[:n_samples] + crypt_labels[:n_samples*3]
-
-IMAGE_IDS_val = []
-IMAGE_LABELS_val = []
-IMAGE_IDS_val = cover_ids[-n_samples_val:] + crypt_ids[-n_samples_val*3:]
-IMAGE_LABELS_val = cover_labels[-n_samples_val:] + crypt_labels[-n_samples_val*3:]
-
 sample_sub = pd.read_csv(PATH + 'sample_submission.csv')
 
 
 train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=batch_size, shuffle=True,
                           sampling="under_sample", data_augmentation=True, format=format)
-validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=batch_size,
-                               sampling="under_sample", format=format)
+validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=batch_size, format=format)
 test_gen = DataGenerator(test_ids, None, batch_size=8, format=format)
 
+
 print("Loading model")
-regression = RegressionModel()
+regression = RegressionModel(mode, alaska_data.num_classes)
 model = regression.build_model()
 model.summary()
 
