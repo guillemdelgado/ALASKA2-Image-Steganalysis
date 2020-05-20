@@ -30,7 +30,8 @@ def weighted_auc(y_true, y_valid):
     weights = [2, 1]
 
     fpr, tpr, thresholds = roc_curve(y_true, y_valid, pos_label=1)
-
+    if np.isnan(np.sum(fpr)):
+        fpr = np.zeros(np.array(fpr).shape)
     # size of subsets
     areas = np.array(tpr_thresholds[1:]) - np.array(tpr_thresholds[:-1])
 
