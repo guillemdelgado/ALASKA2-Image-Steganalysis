@@ -7,7 +7,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 import itertools
 import random
-from utils.data_augmentation import horizontal_flip, vertical_flip, rotation
+from utils.data_augmentation import horizontal_flip, vertical_flip, rotation, TTA
 from utils.utils import JPEGdecompressYCbCr
 from tensorflow.keras.applications.mobilenet import preprocess_input
 import time
@@ -22,7 +22,7 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
     'Generates data for Keras'
 
     def __init__(self, data, labels, batch_size=32, dim=512, n_channels=3,
-                 shuffle=False, sampling=None, data_augmentation=False, format="RGB"):
+                 shuffle=False, sampling=None, data_augmentation=False, format="RGB", tta=None):
 
         """Initialization"""
         if sampling == 'under_sample':
@@ -47,6 +47,7 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
         self.shuffle = shuffle
         self.data_augmentation = data_augmentation
         self.format = format
+        self.tta = tta
         self.on_epoch_end()
 
     def __len__(self):
@@ -114,12 +115,15 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
                 if random.uniform(0, 1):
                     image_decoded = rotation(image_decoded)
 
+            if self.tta is not None:
+                image_decoded = TTA(image_decoded, self.tta)
             # image_decoded = self.resize_crop(image_decoded)
             image_decoded = image_decoded.astype('float32')
             # image_decoded = preprocess_input(np.expand_dims(image_decoded, axis=0))
             # image_decoded = np.squeeze(image_decoded, axis=0)
             x[i] = image_decoded
-            y[i] = labels
+            if self.labels is not None:
+                y[i] = labels
         if self.labels is not None:
             return x, y
         else:

@@ -49,3 +49,15 @@ def JPEGdecompressYCbCr(jpegStruct):
                                                                                              np.dot(QM * D, T))
         imDecompressYCbCr[:, :, ColorChannel] = tmpPixels
     return imDecompressYCbCr
+
+def multiclass_to_binary(y):
+    y_valid = np.array(y)
+    labels = y_valid.argmax(1)
+    new_preds = np.zeros((len(y_valid),))
+
+    new_preds[labels != 0] = y_valid[labels != 0, 1:].sum(1)
+    new_preds[labels == 0] = 1 - y_valid[labels == 0, 0]
+    y_valid = new_preds.tolist()
+    y_valid = [i for i in y_valid]
+
+    return y_valid

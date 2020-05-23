@@ -54,22 +54,43 @@ train_gen = DataGenerator(IMAGE_IDS_train, IMAGE_LABELS_train, batch_size=batch_
                           sampling="under_sample", data_augmentation=True, format=format)
 validation_gen = DataGenerator(IMAGE_IDS_val, IMAGE_LABELS_val, batch_size=batch_size, format=format)
 test_gen = DataGenerator(test_ids, None, batch_size=8, format=format)
-
+test_gen_h = DataGenerator(test_ids, None, batch_size=8, format=format, tta='horizontal')
+test_gen_v = DataGenerator(test_ids, None, batch_size=8, format=format, tta='vertical')
+test_gen_r = DataGenerator(test_ids, None, batch_size=8, format=format, tta='rotate')
 
 print("Loading model")
 regression = RegressionModel(mode, alaska_data.num_classes)
 model = regression.build_model()
 model.summary()
+loading_path = "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\resnet_checkpoint\\oversampled_resnet_withdataugment\\regression_epoch-06_loss-0.8227_val_loss-0.8710.h5"
+loading_path = "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\multiclass_checkpoints\\regression_epoch-02_loss-0.8505_val_loss-1.0366.h5"
+model.load_weights(loading_path, by_name=True, skip_mismatch=True)
+# model.fit(x=train_gen,
+#           steps_per_epoch=len(train_gen),
+#           validation_data=validation_gen,
+#           validation_steps=len(validation_gen),
+#           epochs=10,
+#           callbacks=regression.callbacks)
 
-model.fit(x=train_gen,
-          steps_per_epoch=len(train_gen),
-          validation_data=validation_gen,
-          validation_steps=len(validation_gen),
-          epochs=10,
-          callbacks=regression.callbacks)
+output_predictions_o = model.predict(x=test_gen,
+                                   steps=2)#len(test_gen))
+output_predictions = utils.utils.multiclass_to_binary(output_predictions_o)
 
-output_predictions = model.predict(x=test_gen,
-                                   steps=len(test_gen))
+for origi, modif in zip(output_predictions_o,output_predictions):
+    print("------\nOrigi {} \n Modified {} ------".format(origi,modif))
+
+exit()
+output_predictions_h = model.predict(x=test_gen_h,
+                                     steps=len(test_gen_h))
+output_predictions_v = model.predict(x=test_gen_v,
+                                     steps=len(test_gen_v))
+output_predictions_r = model.predict(x=test_gen_r,
+                                     steps=len(test_gen_r))
+
+output = output_predictions * 0.4 + output_predictions_h * 0.2 + output_predictions_v * 0.2 + output_predictions_r * 0.2
+
+if mode == "multiclass":
+    output_predictions = utils.utils.multiclass_to_binary(output)
 sample_sub['Label'] = output_predictions
 sample_sub.to_csv('submission.csv', index=None)
 
