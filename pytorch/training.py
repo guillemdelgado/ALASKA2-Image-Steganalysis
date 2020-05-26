@@ -19,10 +19,10 @@ from utils.metrics import alaska_weighted_auc
 PATH = "D:\\Data\\alaska2-image-steganalysis\\"
 IMG_SIZE = 512
 train_val_ratio = 0.9
-batch_size = 4
-num_workers = 0
-epochs = 0
-format = "RGB"
+batch_size = 8
+num_workers = 8
+epochs = 20
+color_mode = "YCbCr"
 mode = "multiclass"
 
 if mode == "multiclass":
@@ -51,8 +51,8 @@ AUGMENTATIONS_TEST = Compose([
 ], p=1)
 
 
-train_dataset = Alaska2Dataset(IMAGE_IDS_train, IMAGE_LABELS_train, augmentations=AUGMENTATIONS_TRAIN)
-valid_dataset = Alaska2Dataset(IMAGE_IDS_val, IMAGE_LABELS_val, augmentations=AUGMENTATIONS_TEST) #for faster validation sample
+train_dataset = Alaska2Dataset(IMAGE_IDS_train, IMAGE_LABELS_train, augmentations=AUGMENTATIONS_TRAIN, color_mode=color_mode)
+valid_dataset = Alaska2Dataset(IMAGE_IDS_val, IMAGE_LABELS_val, augmentations=AUGMENTATIONS_TEST, color_mode=color_mode)
 
 train_loader = torch.utils.data.DataLoader(train_dataset,
                                            batch_size=batch_size,
@@ -66,7 +66,7 @@ valid_loader = torch.utils.data.DataLoader(valid_dataset,
 device = 'cuda'
 model = Net(num_classes=n_classes).to(device)
 # pretrained model in my pc. now i will train on all images for 2 epochs
-model.load_state_dict(torch.load('./epoch_1_val_loss_7.05_auc_0.829.pth'))
+model.load_state_dict(torch.load('./epoch_3_val_loss_6.48_auc_0.863.pth'))
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
 criterion = torch.nn.CrossEntropyLoss()
@@ -138,7 +138,7 @@ for i in range(len(test_ids)):
     test_ids[i] = os.path.join(os.path.join(PATH, 'Test'), test_ids[i])
 
 
-test_dataset = Alaska2Dataset(test_ids, None, augmentations=AUGMENTATIONS_TEST, test=True)
+test_dataset = Alaska2Dataset(test_ids, None, augmentations=AUGMENTATIONS_TEST, test=True, color_mode=color_mode)
 batch_size = 16
 num_workers = 0
 
