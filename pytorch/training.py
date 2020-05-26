@@ -66,7 +66,7 @@ valid_loader = torch.utils.data.DataLoader(valid_dataset,
 device = 'cuda'
 model = Net(num_classes=n_classes).to(device)
 # pretrained model in my pc. now i will train on all images for 2 epochs
-model.load_state_dict(torch.load('./epoch_3_val_loss_6.48_auc_0.863.pth'))
+model.load_state_dict(torch.load('./epoch_1_val_loss_7.05_auc_0.829.pth'))
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
 criterion = torch.nn.CrossEntropyLoss()
@@ -173,5 +173,5 @@ test_dataset.data['Id'] = test_dataset.data['ImageFileName'].apply(lambda x: x.s
 test_dataset.data['Label'] = new_preds
 
 test_df = test_dataset.data.drop('ImageFileName', axis=1)
-test_df.to_csv('submission_eb0_e3.csv', index=False)
+test_df.to_csv('submission_eb0_ycbcr.csv', index=False)
 

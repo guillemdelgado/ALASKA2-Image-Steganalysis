@@ -5,10 +5,11 @@ from imblearn.over_sampling import RandomOverSampler
 import numpy as np
 import itertools
 import pandas as pd
+from PIL import Image
 
 class Alaska2Dataset(Dataset):
 
-    def __init__(self, data, labels, augmentations=None, sampling=None, test=False):
+    def __init__(self, data, labels, augmentations=None, sampling=None, test=False, color_mode='RGB'):
 
         """Initialization"""
         if sampling == 'under_sample':
@@ -31,6 +32,7 @@ class Alaska2Dataset(Dataset):
             self.data = pd.DataFrame(list(zip(self.data, self.labels)), columns=['ImageFileName', 'Label'])
         self.augment = augmentations
         self.test = test
+        self.color_mode = color_mode
 
     def __len__(self):
         return len(self.data)
@@ -40,7 +42,16 @@ class Alaska2Dataset(Dataset):
             fn = self.data.loc[idx][0]
         else:
             fn, label = self.data.loc[idx]
-        im = cv2.imread(fn)[:, :, ::-1]
+        if self.color_mode == 'RGB':
+            im = cv2.imread(fn)[:, :, ::-1]
+        elif self.color_mode == 'YCbCr':
+            im = Image.open(fn)
+            im.draft('YCbCr', None)
+            im.load()
+            im = np.array(im)
+        else:
+            print("Color mode not valid")
+            exit()
         if self.augment:
             # Apply transformations
             im = self.augment(image=im)
