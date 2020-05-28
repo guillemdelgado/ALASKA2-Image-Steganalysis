@@ -2,11 +2,12 @@ from utils.utils import seed_everything
 seed_everything()
 import pytorch
 import torch
+import torch.nn as nn
 import torchvision
 import pandas as pd
 import numpy as np
 import os
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from albumentations.pytorch import ToTensor
 from albumentations import VerticalFlip, HorizontalFlip, ToFloat, Compose
 import torch.nn.functional as F
@@ -64,9 +65,14 @@ valid_loader = torch.utils.data.DataLoader(valid_dataset,
                                            num_workers=num_workers,
                                            shuffle=False)
 device = 'cuda'
-model = Net(num_classes=n_classes).to(device)
+print(torch.cuda.device_count())
+if torch.cuda.device_count() > 1 and device == 'cuda':
+  print("Let's use", torch.cuda.device_count(), "GPUs!")
+model = Net(num_classes=n_classes)
 # pretrained model in my pc. now i will train on all images for 2 epochs
-model.load_state_dict(torch.load('./epoch_3_val_loss_6.48_auc_0.863.pth'))
+model.load_state_dict(torch.load('./epoch_5_val_loss_7.03_auc_0.844.pth'))
+model = nn.DataParallel(model).to(device)
+
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
 criterion = torch.nn.CrossEntropyLoss()
@@ -131,7 +137,7 @@ for epoch in range(epochs):
         print(
             f'Val Loss: {epoch_loss:.3}, Weighted AUC:{auc_score:.3}, Acc: {acc:.3}')
     torch.save(model.state_dict(),
-               f"epoch_{epoch}_val_loss_{epoch_loss:.3}_auc_{auc_score:.3}.pth")
+               f"epoch_{epoch}_val_loss_{epoch_loss:.3}_auc_{auc_score:.3}_ycbcr.pth")
 
 test_ids = os.listdir(os.path.join(PATH, 'Test'))
 for i in range(len(test_ids)):
@@ -173,5 +179,5 @@ test_dataset.data['Id'] = test_dataset.data['ImageFileName'].apply(lambda x: x.s
 test_dataset.data['Label'] = new_preds
 
 test_df = test_dataset.data.drop('ImageFileName', axis=1)
-test_df.to_csv('submission_eb0_ycbcr.csv', index=False)
+test_df.to_csv('submission_eb0_epoch5_ycbcr.csv', index=False)
 
