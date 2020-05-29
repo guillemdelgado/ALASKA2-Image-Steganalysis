@@ -1,6 +1,5 @@
 from utils.utils import seed_everything
 seed_everything()
-import pytorch
 import torch
 import torch.nn as nn
 import torchvision
@@ -17,13 +16,15 @@ from data_loader.generator import Alaska2Dataset
 from model.network import Net
 from utils.metrics import alaska_weighted_auc
 
-PATH = "D:\\Data\\alaska2-image-steganalysis\\"
+#PATH = "D:\\Data\\alaska2-image-steganalysis\\"
+PATH = "/export/home/scratch/rdg/data/"
+
 IMG_SIZE = 512
 train_val_ratio = 0.9
 batch_size = 8
 num_workers = 8
 epochs = 20
-color_mode = "YCbCr"
+color_mode = "RGB"
 mode = "multiclass"
 
 if mode == "multiclass":
@@ -31,7 +32,9 @@ if mode == "multiclass":
 else:
     n_classes = 1
 
-alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file='./multiclass_stega_df.csv')
+#alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file='./multiclass_stega_df.csv')
+alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file='./multiclass_stega_df_ricard.csv')
+
 data = alaska_data.build()
 IMAGE_IDS_train = data[0]
 IMAGE_LABELS_train = data[1]
@@ -65,9 +68,9 @@ valid_loader = torch.utils.data.DataLoader(valid_dataset,
                                            num_workers=num_workers,
                                            shuffle=False)
 device = 'cuda'
-print(torch.cuda.device_count())
+
 if torch.cuda.device_count() > 1 and device == 'cuda':
-  print("Let's use", torch.cuda.device_count(), "GPUs!")
+    print("Let's use", torch.cuda.device_count(), "GPUs!")
 model = Net(num_classes=n_classes)
 # pretrained model in my pc. now i will train on all images for 2 epochs
 model.load_state_dict(torch.load('./epoch_5_val_loss_7.03_auc_0.844.pth'))
@@ -137,7 +140,7 @@ for epoch in range(epochs):
         print(
             f'Val Loss: {epoch_loss:.3}, Weighted AUC:{auc_score:.3}, Acc: {acc:.3}')
     torch.save(model.state_dict(),
-               f"epoch_{epoch}_val_loss_{epoch_loss:.3}_auc_{auc_score:.3}_ycbcr.pth")
+               f"epoch_{epoch}_val_loss_{epoch_loss:.3}_auc_{auc_score:.3}_rgb.pth")
 
 test_ids = os.listdir(os.path.join(PATH, 'Test'))
 for i in range(len(test_ids)):
