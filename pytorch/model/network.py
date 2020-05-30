@@ -11,6 +11,7 @@ class Net(nn.Module):
         #self.dense_output = nn.Linear(1280, num_classes)
 
     def forward(self, x):
-        feat = self.model.extract_features(x)
-        feat = F.avg_pool2d(feat, feat.size()[2:]).reshape(-1, 1280)
-        return self.dense_output(feat)
+        # feat = self.model.extract_features(x)
+        # feat = F.avg_pool2d(feat, feat.size()[2:]).reshape(-1, 1280)
+        # return self.dense_output(feat)
+        return self.model.forward(x)
