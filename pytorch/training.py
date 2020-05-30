@@ -73,7 +73,7 @@ if torch.cuda.device_count() > 1 and device == 'cuda':
     print("Let's use", torch.cuda.device_count(), "GPUs!")
 model = Net(num_classes=n_classes)
 # pretrained model in my pc. now i will train on all images for 2 epochs
-model.load_state_dict(torch.load('./epoch_5_val_loss_7.03_auc_0.844.pth'))
+# model.load_state_dict(torch.load('./epoch_5_val_loss_7.03_auc_0.844.pth'))
 model = nn.DataParallel(model).to(device)
 
 
