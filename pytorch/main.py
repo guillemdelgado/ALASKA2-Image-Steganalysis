@@ -22,12 +22,13 @@ from trainer.fitter import Fitter
 
 import json
 
-PATH = "D:\\Data\\alaska2-image-steganalysis\\"
-#PATH = "/export/home/scratch/rdg/data/"
+
+
 config_json = "./config/baseline.json"
 with open(config_json) as f:
   config = json.load(f)
 config['config_json'] = config_json
+PATH = config["train_reader"]["input_path"]
 
 IMG_SIZE = 512
 if "ratio" in config["train_config"]:
