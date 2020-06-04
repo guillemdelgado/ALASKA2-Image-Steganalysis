@@ -1,0 +1,22 @@
+{
+  "train_reader": {
+    "input_path": "D:\\Data\\alaska2-image-steganalysis\\"
+  },
+  "train_config": {
+    "batch_size": 4,
+    "num_workers": 0,
+    "epochs": 30,
+    "color_mode": "RGB",
+    "fold": 0,
+    "nclasses": 4,
+    "lr": 0.001,
+    "verbose": 1,
+    "verbose_step": 10000,
+    "step_scheduler": 0,
+    "validation_scheduler": 1,
+    "reduceLROnPlateau": 1
+  },
+  "output_writer": {
+    "output_path": "./logs"
+  }
+}

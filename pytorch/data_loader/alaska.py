@@ -3,6 +3,12 @@ import cv2
 import jpegio as jpio
 import pandas as pd
 import sklearn.utils
+from sklearn.model_selection import GroupKFold
+import random
+from glob import glob
+from collections import Counter
+import matplotlib.pyplot as plt
+
 
 class Alaska:
     def __init__(self, path, train_val_ratio, format="binary", multiclass_file=None):
@@ -119,7 +125,6 @@ class Alaska:
                 path_ids = []
                 for index, row in class_df.iterrows():
                     path_ids.append(row['ids'])
-                #path_ids = sklearn.utils.shuffle(path_ids)
                 path_ids.sort()
 
                 print("label {} with len {}".format(label,len(path_ids)))
@@ -130,13 +135,6 @@ class Alaska:
                 IMAGE_LABELS_train += [label] * n_samples
                 IMAGE_IDS_val += path_ids[-n_samples_val:]
                 IMAGE_LABELS_val += [label] * n_samples_val
-                # for image in path_ids:
-                #     print(image)
-                #     im = cv2.imread(image)
-                #     cv2.imshow("title", im)
-                #     k = cv2.waitKey(0)
-                #     if k == 27:
-                #         break
             self.num_classes = 1 + len(labels_class)
         id_covers = [s.replace('JMiPOD', 'Cover') for s in IMAGE_IDS_train if "JMiPOD" in s]
         id_covers_val = [s.replace('JMiPOD', 'Cover') for s in IMAGE_IDS_val if "JMiPOD" in s]
@@ -148,6 +146,36 @@ class Alaska:
         IMAGE_LABELS_val += [0] * len(id_covers_val)
 
         return IMAGE_IDS_train, IMAGE_LABELS_train, IMAGE_IDS_val, IMAGE_LABELS_val
+
+
+    def build_kfold(self, nkfold):
+
+        # Check if the slash is in windows or ubuntu
+        if os.name == 'nt':
+            slash = "\\"
+        else:
+            slash = "/"
+
+        # Adds dataset to paths.
+        dataset = []
+        for label, kind in enumerate(['Cover', 'JMiPOD', 'JUNIWARD', 'UERD']):
+            for path in glob(self.path + slash +'Cover'+slash +'*.jpg'):
+                dataset.append({
+                    'kind': kind,
+                    'image_name': path.split(slash)[-1],
+                    'label': label
+                })
+        random.shuffle(dataset)
+        dataset = pd.DataFrame(dataset)
+        gkf = GroupKFold(n_splits=nkfold)
+
+        dataset.loc[:, 'fold'] = 0
+        # Group the KFold by the cover and the corresponding modified images in the same split.
+        for fold_number, (train_index, val_index) in enumerate(
+                gkf.split(X=dataset.index, y=dataset['label'], groups=dataset['image_name'])):
+            dataset.loc[dataset.iloc[val_index].index, 'fold'] = fold_number
+        return dataset
+
 
     def calculate_qf(self, image):
         jpegStruct = jpio.read(image)
