@@ -8,7 +8,7 @@ import numpy as np
 import os
 from tqdm import tqdm
 from albumentations.pytorch import ToTensor
-#from catalyst.data.sampler import BalanceClassSampler
+from catalyst.data.sampler import BalanceClassSampler
 from torch.utils.data.sampler import SequentialSampler
 import torch.nn.functional as F
 
