@@ -1,5 +1,7 @@
 from utils.utils import seed_everything
 seed_everything()
+import warnings
+warnings.filterwarnings("ignore")
 import torch
 import torch.nn as nn
 import torchvision

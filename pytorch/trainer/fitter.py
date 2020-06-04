@@ -1,4 +1,5 @@
 import warnings
+warnings.filterwarnings("ignore")
 import time
 import torch
 import os
@@ -10,7 +11,6 @@ from utils.metrics import AverageMeter, RocAucMeter
 from tqdm import tqdm
 from shutil import copyfile
 
-warnings.filterwarnings("ignore")
 
 
 class Fitter:
@@ -84,8 +84,6 @@ class Fitter:
                 self.best_summary_loss = summary_loss.avg
                 self.model.eval()
                 self.save(f'{self.base_dir}/best-checkpoint-{str(self.epoch).zfill(3)}epoch.bin')
-                for path in sorted(glob(f'{self.base_dir}/best-checkpoint-*epoch.bin'))[:-3]:
-                    os.remove(path)
 
             if self.config["train_config"]["validation_scheduler"]:
                 self.scheduler.step(metrics=summary_loss.avg)
