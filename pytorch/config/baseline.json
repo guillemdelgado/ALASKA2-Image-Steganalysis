@@ -3,8 +3,8 @@
     "input_path": "D:\\Data\\alaska2-image-steganalysis\\"
   },
   "train_config": {
-    "batch_size": 32,
-    "num_workers": 8,
+    "batch_size": 4,
+    "num_workers": 0,
     "epochs": 30,
     "color_mode": "RGB",
     "fold": 0,
@@ -18,5 +18,10 @@
   },
   "output_writer": {
     "output_path": "./logs"
+  },
+  "test_config": {
+    "TTA": 1,
+    "input_path": "D:\\Data\\alaska2-image-steganalysis\\Test\\",
+    "checkpoint": "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\pytorch\\logs_kfold0\\last-checkpoint.bin"
   }
 }
