@@ -33,8 +33,7 @@ class Fitter:
         if torch.cuda.device_count() > 1 and device == 'cuda':
             print("Let's use", torch.cuda.device_count(), "GPUs!")
         self.model = nn.DataParallel(model).to(device)
-        if "finetune_checkpoint" in config:
-            self.load(config["finetune_checkpoint"])
+
 
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -57,6 +56,9 @@ class Fitter:
                 eps=1e-08
             )
             self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, **scheduler_params)
+
+        if "finetune_checkpoint" in config:
+            self.load(config["finetune_checkpoint"])
 
         #TODO: Set this on dataparallel?
         self.criterion = LabelSmoothing().to(self.device)
