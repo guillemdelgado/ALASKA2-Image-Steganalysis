@@ -18,6 +18,11 @@
     "reduceLROnPlateau": 1
   },
   "output_writer": {
-    "output_path": "./logs_fold0_continuation
+    "output_path": "./logs"
+  },
+  "test_config": {
+    "TTA": 1,
+    "input_path": "D:\\Data\\alaska2-image-steganalysis\\Test\\",
+    "checkpoint": "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\pytorch\\logs_kfold4\\last-checkpoint.bin"
   }
 }
