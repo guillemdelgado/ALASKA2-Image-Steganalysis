@@ -23,7 +23,8 @@ def alaska_weighted_auc(y_true, y_valid):
         y_max = tpr_thresholds[idx + 1]
         mask = (y_min < tpr) & (tpr < y_max)
         # pdb.set_trace()
-
+        if mask.sum() == 0:
+            continue
         x_padding = np.linspace(fpr[mask][-1], 1, 100)
 
         x = np.concatenate([fpr[mask], x_padding])
