@@ -91,7 +91,7 @@ for image_names, images in tk0:
     result['Label'].extend(y_pred)
 
 submission = pd.DataFrame(result)
-submission.to_csv('submission30.csv', index=False)
+submission.to_csv('fold4_submission49_TTA.csv', index=False)
 submission.head()
 
 

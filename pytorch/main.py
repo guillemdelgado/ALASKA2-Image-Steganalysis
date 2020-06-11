@@ -16,7 +16,7 @@ import torch.nn.functional as F
 
 from data_loader.alaska import Alaska
 from data_loader.generator import Alaska2Dataset
-from model.network import Net
+from model.network import Net, AttentionNet
 from utils.metrics import alaska_weighted_auc
 from utils.data_augmentation import get_transforms
 from data_loader.dataset_retriever import DatasetRetriever
@@ -87,8 +87,10 @@ val_loader = torch.utils.data.DataLoader(
     pin_memory=False,
 )
 
+#model = Net(num_classes=nclasses)
+model = AttentionNet.from_pretrained('efficientnet-b2')
+model.build_attention()
 
-model = Net(num_classes=nclasses)
 fitter = Fitter(model=model, device=device, config=config)
 fitter.fit(train_loader, val_loader)
 
