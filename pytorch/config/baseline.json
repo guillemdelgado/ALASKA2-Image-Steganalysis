@@ -1,5 +1,4 @@
 {
-  "finetune_checkpoint": "/export/home/scratch/rdg/ALASKA2-Image-Steganalysis/pytorch/logs_fold0/last-checkpoint.bin",
   "train_reader": {
     "input_path": "/export/home/scratch/rdg/data/"
   },
@@ -10,7 +9,7 @@
     "color_mode": "RGB",
     "fold": 0,
     "nclasses": 4,
-    "lr": 0.00003125,
+    "lr": 0.001,
     "verbose": 1,
     "verbose_step": 10000,
     "step_scheduler": 0,
