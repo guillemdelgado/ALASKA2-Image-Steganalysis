@@ -47,7 +47,6 @@ class AttentionNet(EfficientNet):
             if drop_connect_rate:
                 drop_connect_rate *= float(idx) / len(self._blocks)
             x = block(x, drop_connect_rate=drop_connect_rate)
-            print(idx, x.size())
             if idx == 7:
                 l1 = x
             if idx == 15:
