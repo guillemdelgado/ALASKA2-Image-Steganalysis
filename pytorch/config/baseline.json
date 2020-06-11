@@ -1,0 +1,27 @@
+{
+  "train_reader": {
+    "input_path": "/export/home/scratch/rdg/data/"
+  },
+  "train_config": {
+    "batch_size": 32,
+    "num_workers": 8,
+    "epochs": 20,
+    "color_mode": "RGB",
+    "fold": 0,
+    "nclasses": 4,
+    "lr": 0.001,
+    "verbose": 1,
+    "verbose_step": 10000,
+    "step_scheduler": 0,
+    "validation_scheduler": 1,
+    "reduceLROnPlateau": 1
+  },
+  "output_writer": {
+    "output_path": "./logs"
+  },
+  "test_config": {
+    "TTA": 1,
+    "input_path": "D:\\Data\\alaska2-image-steganalysis\\Test\\",
+    "checkpoint": "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\pytorch\\logs_kfold4\\last-checkpoint.bin"
+  }
+}
