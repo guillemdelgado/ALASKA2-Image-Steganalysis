@@ -3,11 +3,12 @@
     "input_path": "D:\\Data\\alaska2-image-steganalysis"
   },
   "train_config": {
-    "batch_size": 4,
-    "num_workers": 0,
-    "epochs": 20,
+    "network": "efficientnet-b7",
+    "batch_size": 32,
+    "num_workers": 8,
+    "epochs": 50,
     "color_mode": "RGB",
-    "fold": 0,
+    "fold": 1,
     "nclasses": 4,
     "lr": 0.001,
     "verbose": 1,

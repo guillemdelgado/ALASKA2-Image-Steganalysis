@@ -4,10 +4,17 @@ import torch.nn.functional as F
 
 
 class Net(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, config):
         super().__init__()
-        #self.model = EfficientNet.from_pretrained('efficientnet-b7', num_classes=num_classes)
-        self.model = EfficientNet.from_pretrained('efficientnet-b2')
-        self.model._fc = nn.Linear(in_features=1408, out_features=4, bias=True)
+        network = config["train_config"]["network"]
+        self.model = EfficientNet.from_pretrained(network)
+        if network == "efficientnet-b7":
+            self.model._fc = nn.Linear(in_features=2560, out_features=num_classes, bias=True)
+        elif network == "efficientnet-b2":
+            self.model._fc = nn.Linear(in_features=1408, out_features=num_classes, bias=True)
+        else:
+            print("Network {} not implemented".format(network))
+            exit()
+
     def forward(self, x):
         return self.model.forward(x)

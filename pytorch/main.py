@@ -88,7 +88,7 @@ val_loader = torch.utils.data.DataLoader(
 )
 
 
-model = Net(num_classes=nclasses)
+model = Net(num_classes=nclasses, config=config)
 fitter = Fitter(model=model, device=device, config=config)
 fitter.fit(train_loader, val_loader)
 
