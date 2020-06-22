@@ -1,10 +1,10 @@
 {
   "train_reader": {
-    "input_path": "D:\\Data\\alaska2-image-steganalysis"
+    "input_path": "/export/home/scratch/rdg/data/"
   },
   "train_config": {
     "network": "efficientnet-b7",
-    "batch_size": 32,
+    "batch_size": 8,
     "num_workers": 8,
     "epochs": 50,
     "color_mode": "RGB",
@@ -18,11 +18,7 @@
     "reduceLROnPlateau": 1
   },
   "output_writer": {
-    "output_path": "./logs"
-  },
-  "test_config": {
-    "TTA": 1,
-    "input_path": "D:\\Data\\alaska2-image-steganalysis\\Test\\",
-    "checkpoint": "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\pytorch\\logs_kfold4\\last-checkpoint.bin"
+    "output_path": "./logs_e2_e7_fold1"
   }
 }
+
