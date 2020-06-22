@@ -72,7 +72,7 @@ validation_dataset = DatasetRetriever(
 
 train_loader = torch.utils.data.DataLoader(
     train_dataset,
-    sampler=BalanceClassSampler(labels=train_dataset.get_labels(), mode="downsampling"),
+    sampler=BalanceClassSampler(labels=train_dataset.get_labels(), mode="upsampling"),
     batch_size=config["train_config"]["batch_size"],
     pin_memory=False,
     drop_last=True,
