@@ -41,6 +41,7 @@ color_mode = "RGB"
 mode = "jpegfactor"
 fold_number = config["train_config"]["fold"]
 nclasses = config["train_config"]["nclasses"]
+nfolds = config["train_config"]["nfolds"]
 mode = config["train_config"]["mode"] if "mode" in config["train_config"] else None
 multiclass_df = config["train_config"]["multiclass_df"] if "multiclass_df" in config["train_config"] else None
 device = 'cuda'
@@ -48,7 +49,7 @@ device = 'cuda'
 alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file=multiclass_df)
 #alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file='./multiclass_stega_df_ricard.csv')
 
-dataset = alaska_data.build_kfold(5)
+dataset = alaska_data.build_kfold(nfolds)
 AUGMENTATIONS_TRAIN, AUGMENTATIONS_TEST = get_transforms()
 
 
@@ -86,7 +87,8 @@ val_loader = torch.utils.data.DataLoader(
     sampler=SequentialSampler(validation_dataset),
     pin_memory=False,
 )
-
+if nfolds == 0:
+    val_loader = None
 
 model = Net(num_classes=nclasses, config=config)
 fitter = Fitter(model=model, device=device, config=config)

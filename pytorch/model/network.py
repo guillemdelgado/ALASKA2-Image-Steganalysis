@@ -15,6 +15,18 @@ class Net(nn.Module):
         else:
             print("Network {} not implemented".format(network))
             exit()
+        frozen = True
+        if "frozen_layer" in config["train_config"]:
+            layer_frozen = config["train_config"]["frozen_layer"]
+
+        for name, p in self.named_parameters():
+            if layer_frozen in name:
+                frozen = False
+            if frozen:
+                p.requires_grad = False
+            else:
+                p.requires_grad = True
+            print("Layer: {} frozen={}".format(name, p.requires_grad))
 
     def forward(self, x):
         return self.model.forward(x)

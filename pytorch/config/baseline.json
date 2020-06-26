@@ -3,19 +3,21 @@
     "input_path": "/export/home/scratch/rdg/data/"
   },
   "train_config": {
-    "network": "efficientnet-b7",
-    "batch_size": 8,
+    "network": "efficientnet-b2",
+    "batch_size": 32,
     "num_workers": 8,
     "epochs": 50,
     "color_mode": "RGB",
-    "fold": 1,
+    "nfold": 0,
+    "fold": 0,
     "nclasses": 4,
     "lr": 0.001,
     "verbose": 1,
     "verbose_step": 10000,
     "step_scheduler": 0,
     "validation_scheduler": 1,
-    "reduceLROnPlateau": 1
+    "reduceLROnPlateau": 1,
+    "frozen_layer": "",
   },
   "output_writer": {
     "output_path": "./logs_e2_e7_fold1"
