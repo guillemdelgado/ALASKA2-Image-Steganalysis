@@ -6,11 +6,35 @@ from model.attention import ProjectorBlock, LinearAttentionBlock
 
 
 class Net(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, config):
         super().__init__()
-        #self.model = EfficientNet.from_pretrained('efficientnet-b7', num_classes=num_classes)
-        self.model = EfficientNet.from_pretrained('efficientnet-b2')
-        self.model._fc = nn.Linear(in_features=1408, out_features=4, bias=True)
+
+        network = config["train_config"]["network"]
+
+        if network == "attention-b2":
+            self.model = AttentionNet.from_pretrained('efficientnet-b2')
+            self.model.build_attention()
+        else:
+            self.model = EfficientNet.from_pretrained(network)
+            if network == "efficientnet-b7":
+                self.model._fc = nn.Linear(in_features=2560, out_features=num_classes, bias=True)
+            elif network == "efficientnet-b2":
+                self.model._fc = nn.Linear(in_features=1408, out_features=num_classes, bias=True)
+            else:
+                print("Network {} not implemented".format(network))
+                exit()
+        frozen = True
+        if "frozen_layer" in config["train_config"]:
+            layer_frozen = config["train_config"]["frozen_layer"]
+
+        for name, p in self.named_parameters():
+            if layer_frozen in name:
+                frozen = False
+            if frozen:
+                p.requires_grad = False
+            else:
+                p.requires_grad = True
+            print("Layer: {} frozen={}".format(name, p.requires_grad))
 
 
     def forward(self, x):
@@ -21,7 +45,9 @@ class AttentionNet(EfficientNet):
     def __init__(self, blocks_args=None, global_params=None):
         super().__init__(blocks_args, global_params)
         #super().__init__()
-        #self.model = EfficientNet.from_pretrained('efficientnet-b2')
+        self.model = EfficientNet.from_pretrained('efficientnet-b2')
+        print(self.model)
+        exit()
 
     def build_attention(self):
         # This are my attention layers
@@ -47,6 +73,7 @@ class AttentionNet(EfficientNet):
             if drop_connect_rate:
                 drop_connect_rate *= float(idx) / len(self._blocks)
             x = block(x, drop_connect_rate=drop_connect_rate)
+            
             if idx == 7:
                 l1 = x
             if idx == 15:
@@ -69,3 +96,4 @@ class AttentionNet(EfficientNet):
         x = self.classification(g)  # batch_sizexnum_classes
 
         return x
+

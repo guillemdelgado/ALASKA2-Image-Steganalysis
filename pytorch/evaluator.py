@@ -47,7 +47,7 @@ AUGMENTATIONS_TRAIN, AUGMENTATIONS_TEST = get_transforms()
 
 
 
-model = Net(num_classes=nclasses)
+model = Net(num_classes=nclasses, config=config)
 if torch.cuda.device_count() > 1 and device == 'cuda':
     print("Let's use", torch.cuda.device_count(), "GPUs!")
 model = nn.DataParallel(model).to(device)
@@ -91,7 +91,7 @@ for image_names, images in tk0:
     result['Label'].extend(y_pred)
 
 submission = pd.DataFrame(result)
-submission.to_csv('fold4_submission49_TTA.csv', index=False)
+submission.to_csv('submissionALLDATA_last.csv', index=False)
 submission.head()
 
 

@@ -77,18 +77,19 @@ class Fitter:
                 f'[RESULT]: Train. Epoch: {self.epoch}, summary_loss: {summary_loss.avg:.5f}, final_score: {final_scores.avg:.5f}, time: {(time.time() - t):.5f}')
             self.save(f'{self.base_dir}/last-checkpoint.bin')
 
-            t = time.time()
-            summary_loss, final_scores = self.validation(validation_loader)
+            if validation_loader is not None:
+                t = time.time()
+                summary_loss, final_scores = self.validation(validation_loader)
 
-            self.log(
-                f'[RESULT]: Val. Epoch: {self.epoch}, summary_loss: {summary_loss.avg:.5f}, final_score: {final_scores.avg:.5f}, time: {(time.time() - t):.5f}')
-            if summary_loss.avg < self.best_summary_loss:
-                self.best_summary_loss = summary_loss.avg
-                self.model.eval()
-                self.save(f'{self.base_dir}/best-checkpoint-{str(self.epoch).zfill(3)}epoch.bin')
+                self.log(
+                    f'[RESULT]: Val. Epoch: {self.epoch}, summary_loss: {summary_loss.avg:.5f}, final_score: {final_scores.avg:.5f}, time: {(time.time() - t):.5f}')
+                if summary_loss.avg < self.best_summary_loss:
+                    self.best_summary_loss = summary_loss.avg
+                    self.model.eval()
+                    self.save(f'{self.base_dir}/best-checkpoint-{str(self.epoch).zfill(3)}epoch.bin')
 
-            if self.config["train_config"]["validation_scheduler"]:
-                self.scheduler.step(metrics=summary_loss.avg)
+                if self.config["train_config"]["validation_scheduler"]:
+                    self.scheduler.step(metrics=summary_loss.avg)
 
             self.epoch += 1
 

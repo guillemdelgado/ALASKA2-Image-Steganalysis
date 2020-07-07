@@ -133,3 +133,7 @@ dmypy.json
 *.h5
 *tfevents*
 *.csv
+
+#Pytorch
+*.pth
+log*

@@ -167,13 +167,14 @@ class Alaska:
                 })
         random.shuffle(dataset)
         dataset = pd.DataFrame(dataset)
-        gkf = GroupKFold(n_splits=nkfold)
 
         dataset.loc[:, 'fold'] = 0
-        # Group the KFold by the cover and the corresponding modified images in the same split.
-        for fold_number, (train_index, val_index) in enumerate(
-                gkf.split(X=dataset.index, y=dataset['label'], groups=dataset['image_name'])):
-            dataset.loc[dataset.iloc[val_index].index, 'fold'] = fold_number
+        if nkfold != 0:
+            gkf = GroupKFold(n_splits=nkfold)
+            # Group the KFold by the cover and the corresponding modified images in the same split.
+            for fold_number, (train_index, val_index) in enumerate(
+                    gkf.split(X=dataset.index, y=dataset['label'], groups=dataset['image_name'])):
+                dataset.loc[dataset.iloc[val_index].index, 'fold'] = fold_number
         return dataset
 
 
