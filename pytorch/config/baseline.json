@@ -9,7 +9,7 @@
     "epochs": 50,
     "color_mode": "RGB",
     "nfolds": 0,
-    "fold": 1,
+    "fold": 0,
     "nclasses": 4,
     "lr": 0.001,
     "verbose": 1,
