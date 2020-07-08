@@ -1,12 +1,12 @@
 {
   "train_reader": {
-    "input_path": "D:\\Data\\alaska2-image-steganalysis"
+    "input_path": "/export/home/scratch/rdg/data/"
   },
   "train_config": {
     "network": "attention-b2",
     "batch_size": 32,
-    "num_workers": 0,
-    "epochs": 50,
+    "num_workers": 8,
+    "epochs": 60,
     "color_mode": "RGB",
     "nfolds": 5,
     "fold": 1,
