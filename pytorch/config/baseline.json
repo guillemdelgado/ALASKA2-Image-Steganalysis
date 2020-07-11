@@ -4,7 +4,7 @@
   },
   "train_config": {
     "network": "attention-b2",
-    "batch_size": 32,
+    "batch_size": 24,
     "num_workers": 8,
     "epochs": 60,
     "color_mode": "RGB",
