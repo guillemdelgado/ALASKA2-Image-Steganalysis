@@ -12,7 +12,7 @@ Repository for the SlimBros team for the [ALASKA2 Image Steganalysis challenge](
 
 ## Team
 - [Guillem Delgado](https://www.linkedin.com/in/guillemdelgado/)
-- [Ricard Dekgado](https://www.linkedin.com/in/ricarddelgadogonzalo/)
+- [Ricard Delgado](https://www.linkedin.com/in/ricarddelgadogonzalo/)
 
 ## Timeline
 - July 13, 2020 - Entry deadline. Must accept the competition rules before this date in order to compete.
