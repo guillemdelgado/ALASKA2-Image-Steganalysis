@@ -56,3 +56,11 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 - [Challenge website](https://www.kaggle.com/c/alaska2-image-steganalysis/)
 - [Submit predictions](https://www.kaggle.com/c/alaska2-image-steganalysis/submit)
 - [Leaderboard](https://www.kaggle.com/c/alaska2-image-steganalysis/leaderboard)
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
