@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 
 class Alaska:
-    def __init__(self, path, train_val_ratio, format="binary", multiclass_file=None):
+    def __init__(self, path, train_val_ratio, config, format="binary", multiclass_file=None):
         print("Reading data from {}".format(path))
         self.path = path
         self.format = format
@@ -28,6 +28,11 @@ class Alaska:
         self.UERD_dict = {95: 7, 90: 8, 75: 9}
         self.multiclass_file = multiclass_file
         self.num_classes = None
+        self.config = config
+        if "class_names" in self.config["train_config"]:
+            self.class_names = self.config["train_config"]["class_names"]
+        else:
+            self.class_names = ['Cover', 'JMiPOD', 'JUNIWARD', 'UERD']
 
     def build(self):
         ## 1. List images IDS
