@@ -27,8 +27,8 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 ```
 .
 |-- 1. README.md
-|-- pytorch
-|   `-- config
+|-- 2. pytorch
+|   |-- config
 |   `-- data_loader
 |   `-- model
 |   `-- trainer
@@ -36,14 +36,11 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 |   `-- evaluator.py
 |   `-- main.py
 |   `-- training.py (deprecated)
-|-- tensorflow
-|   `-- data_loader
+|-- 3. tensorflow
+|   |-- data_loader
 |   `-- model
 |   `-- training.py
 |   `-- blending.py
-|-- utils
-|   |-- metrics.py
-|   `-- utils.py
 
 ```
 
