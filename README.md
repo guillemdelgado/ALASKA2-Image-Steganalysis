@@ -7,7 +7,7 @@ Repository for the SlimBros team for the [ALASKA2 Image Steganalysis challenge](
   * [Timeline](#timeline)
   * [File structure](#file-structure) 
   * [Models](#models)
-  * [Current status](#current-status) 
+  * [Current status](#usage) 
   * [Useful links](#useful-links)
   * [Contributing](#contributing)
   * [License](#License)
