@@ -90,7 +90,7 @@ val_loader = torch.utils.data.DataLoader(
 
 if nfolds == 0:
     val_loader = None
-from torchsummary import summary
+#from torchsummary import summary
 model = Net(num_classes=nclasses, config=config)
 
 fitter = Fitter(model=model, device=device, config=config)
