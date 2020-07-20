@@ -11,7 +11,8 @@ Repository for the SlimBros team for the [ALASKA2 Image Steganalysis challenge](
   * [Useful links](#useful-links)
 
 ## Team
-- [Guillem Delgado](https://www.linkedin.com/in/guillem-delgado-gonzalo-576aa73a/)
+- [Guillem Delgado](https://www.linkedin.com/in/guillemdelgado/)
+- [Ricard Dekgado](https://www.linkedin.com/in/ricarddelgadogonzalo/)
 
 ## Timeline
 - July 13, 2020 - Entry deadline. Must accept the competition rules before this date in order to compete.
@@ -24,11 +25,20 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 ```
 .
 |-- 1. README.md
-|-- 2. training.py
-|-- data_loader
-|   `-- generator.py
-|-- model
-|   `-- regression.py
+|-- pytorch
+|   `-- config
+|   `-- data_loader
+|   `-- model
+|   `-- trainer
+|   `-- utils
+|   `-- evaluator.py
+|   `-- main.py
+|   `-- training.py (deprecated)
+|-- tensorflow
+|   `-- data_loader
+|   `-- model
+|   `-- training.py
+|   `-- blending.py
 |-- utils
 |   |-- metrics.py
 |   `-- utils.py
@@ -36,16 +46,11 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 ```
 
 ## Models
-- [ ] Regression
-  - [ ] ensenet
-- [ ] GAN
-  - [ ] State of the Art for Steganalysis 
-- [ ] Stacking the classical ML models
-
-## Ongoing tasks
-- [ ] Data augmentation
-  - [ ] Generate shifts
-- [ ] Learning rate Scheduler
+- [x] Regression
+  - [x] Rensenet
+- [x] Classification (4/9 classes)
+  - [x] EfficientNet
+  - [x] Visual Attention
 
 ## Useful links
 - [Challenge website](https://www.kaggle.com/c/alaska2-image-steganalysis/)
