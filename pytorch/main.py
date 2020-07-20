@@ -46,7 +46,7 @@ mode = config["train_config"]["mode"] if "mode" in config["train_config"] else N
 multiclass_df = config["train_config"]["multiclass_df"] if "multiclass_df" in config["train_config"] else None
 device = 'cuda'
 
-alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file=multiclass_df)
+alaska_data = Alaska(PATH, train_val_ratio, config, mode, multiclass_file=multiclass_df)
 #alaska_data = Alaska(PATH, train_val_ratio, mode, multiclass_file='./multiclass_stega_df_ricard.csv')
 
 dataset = alaska_data.build_kfold(nfolds)
