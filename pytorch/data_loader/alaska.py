@@ -163,7 +163,7 @@ class Alaska:
 
         # Adds dataset to paths.
         dataset = []
-        for label, kind in enumerate(['Cover', 'JMiPOD', 'JUNIWARD', 'UERD']):
+        for label, kind in enumerate(self.class_names):
             for path in glob(self.path + slash +'Cover'+slash +'*.jpg'):
                 dataset.append({
                     'kind': kind,
