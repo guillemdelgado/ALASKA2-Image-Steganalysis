@@ -9,6 +9,8 @@ Repository for the SlimBros team for the [ALASKA2 Image Steganalysis challenge](
   * [Models](#models)
   * [Current status](#current-status) 
   * [Useful links](#useful-links)
+  * [Contributing](#contributing)
+  * [License](#License)
 
 ## Team
 - [Guillem Delgado](https://www.linkedin.com/in/guillemdelgado/)
@@ -51,6 +53,9 @@ All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise note
 - [x] Classification (4/9 classes)
   - [x] EfficientNet
   - [x] Visual Attention
+
+## Usage
+Launch pytorch/main.py file for the up-to-date changes and the best resulting score. The evaluator.py file will generate a submition for the test set. Modify accordingly the JSON file inside the config folder in order to use the scripts. 
 
 ## Useful links
 - [Challenge website](https://www.kaggle.com/c/alaska2-image-steganalysis/)
