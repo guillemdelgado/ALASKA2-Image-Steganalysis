@@ -1,9 +1,9 @@
 {
   "train_reader": {
-    "input_path": "/export/home/scratch/rdg/data/"
+    "input_path": "../input/alaska2-image-steganalysis"
   },
   "train_config": {
-    "network": "attention-b2",
+    "network": "efficientnet-b2",
     "batch_size": 32,
     "num_workers": 8,
     "epochs": 60,
@@ -17,15 +17,17 @@
     "step_scheduler": 0,
     "validation_scheduler": 1,
     "reduceLROnPlateau": 1,
-    "frozen_layer": ""
+    "frozen_layer": "",
+    "metrics": 0,
+    "finetune_checkpoint": ""
   },
   "output_writer": {
-    "output_path": "./logs_e2_e7_fold1"
+    "output_path": "./logs"
   },
   "test_config": {
     "TTA": 1,
-    "input_path": "D:\\Data\\alaska2-image-steganalysis\\Test\\",
-    "checkpoint": "C:\\Users\\guill\\Documents\\Development\\ALASKA2-Image-Steganalysis\\pytorch\\logs_alldata\\last-checkpoint.bin"
+    "input_path": "../input/alaska2-image-steganalysis/Test",
+    "checkpoint": "../input/alaska2customtrain/best-checkpoint-052epoch.bin"
   }
 }
 

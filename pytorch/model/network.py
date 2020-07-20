@@ -88,7 +88,7 @@ class Net(nn.Module):
                 p.requires_grad = False
             else:
                 p.requires_grad = True
-            print("Layer: {} frozen={}".format(name, p.requires_grad))
+            print("Layer: {} Requires grad={}".format(name, p.requires_grad))
 
 
     def forward(self, x):

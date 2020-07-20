@@ -7,19 +7,20 @@ import torch.nn as nn
 import torchvision
 import pandas as pd
 import numpy as np
-import os
 from tqdm import tqdm
 from albumentations.pytorch import ToTensor
 from catalyst.data.sampler import BalanceClassSampler
 from torch.utils.data.sampler import SequentialSampler
 import torch.nn.functional as F
 import glob
+import os
 
 from model.network import Net
 from utils.data_augmentation import get_transforms
 from data_loader.dataset_retriever import DatasetSubmissionRetriever
 
 import json
+import cv2
 
 
 
@@ -77,12 +78,26 @@ result = {'Id': [], 'Label': []}
 tk0 = tqdm(data_loader, total=int(len(data_loader)))
 for image_names, images in tk0:
     if 'TTA' in config['test_config'] and config['test_config']['TTA']:
-        im = images.flip(2)
-        outputs = model(im.cuda())
-        im = images.flip(3)
-        outputs = (0.25 * outputs + 0.25 * model(im.cuda()))
-        y_pred = model(images.cuda())
-        y_pred = (outputs + 0.5 * y_pred)
+        im90 = images.rot90(1, (2, 3))
+        im180 = images.rot90(2, (2, 3))
+        im270 = images.rot90(3, (2, 3))
+        im90f = im90.flip(2)
+        im180f = im180.flip(2)
+        im270f = im270.flip(2)
+        imf = images.flip(2)
+
+        outputs90 = model(im90)
+        outputs180 = model(im180)
+        outputs270 = model(im270)
+        outputs90f = model(im90f)
+        outputs180f = model(im180f)
+        outputs270f = model(im270f)
+        outputsf = model(imf)
+        y_pred = model(images)
+
+        y_pred = (y_pred * 0.3 + outputsf * 0.1 +
+                  outputs90 * 0.1 + outputs180 * 0.1 + outputs270 * 0.1 +
+                  outputs90f * 0.1 + outputs180f * 0.1 + outputs270f * 0.1)
     else:
         y_pred = model(images.cuda())
     y_pred = 1 - nn.functional.softmax(y_pred, dim=1).data.cpu().numpy()[:, 0]
@@ -91,7 +106,7 @@ for image_names, images in tk0:
     result['Label'].extend(y_pred)
 
 submission = pd.DataFrame(result)
-submission.to_csv('submissionALLDATA_last.csv', index=False)
+submission.to_csv('fold1_submission52_ISOMETRIC_tta.csv', index=False)
 submission.head()
 
 

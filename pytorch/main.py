@@ -94,7 +94,6 @@ from torchsummary import summary
 model = Net(num_classes=nclasses, config=config)
 
 fitter = Fitter(model=model, device=device, config=config)
-summary(fitter.model, (3, 512, 512))
 fitter.fit(train_loader, val_loader)
 
 
